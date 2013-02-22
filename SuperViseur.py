@@ -73,11 +73,8 @@ class Superviseur(object):
                 else:
                     self.log( "\t\t%s : %s " % (obj, lexer.next() ))
             else:
-                self.log( "CMD : %s non reconnu" )
+                self.log( "CMD : %s non reconnu" % cmd )
                 
-                
-
-
     def load_config(self):
         """
             Chargement de la configuration

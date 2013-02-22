@@ -1,54 +1,54 @@
-052 17:59:46 : debut
-052 17:59:46 : load config main.conf 
-052 17:59:46 : 	> SET FILE name PATH chemin 
-052 17:59:46 : Commande : SET 
-052 17:59:46 : 	> SET DIRECTORY name PATH chemin 
-052 17:59:46 : Commande : SET 
-052 17:59:46 : 	> SET FILE_SYSTEM name DEVICE 
-052 17:59:46 : Commande : SET 
-052 17:59:46 : 		FILE_SYSTEM : name 
-052 17:59:46 : 	> SET HOST name 
-052 17:59:46 : Commande : SET 
-052 17:59:46 : 		HOST : name 
-052 17:59:46 : 	> SET PROGRAM name PATH chemin 
-052 17:59:46 : Commande : SET 
-052 17:59:46 : 	> SET SYSTEM name 
-052 17:59:46 : Commande : SET 
-052 17:59:46 : 		SYSTEM : name 
-052 17:59:46 : 	> SET PROCESS [ pid | pid_file ] 
-052 17:59:46 : Commande : SET 
-052 17:59:46 : 		PROCESS : [ 
-052 17:59:46 : 	> SET GROUP name 
-052 17:59:46 : Commande : SET 
-052 17:59:46 : 		GROUP : name 
-052 17:59:46 : 	>     ADD GROUP name admin@example.com 
-052 17:59:46 : Commande : ADD 
-052 17:59:46 : CMD : %s non reconnu
-052 17:59:46 : 	>     ADD GROUP name sys@example.com 
-052 17:59:46 : Commande : ADD 
-052 17:59:46 : CMD : %s non reconnu
-052 17:59:46 : 	>     ADD GROUPE name root@example.com 
-052 17:59:46 : Commande : ADD 
-052 17:59:46 : CMD : %s non reconnu
-052 17:59:46 : 	> SET MESSAGE name 
-052 17:59:46 : Commande : SET 
-052 17:59:46 : 		MESSAGE : name 
-052 17:59:46 : 	>     FROM    from 
-052 17:59:46 : Commande : FROM 
-052 17:59:46 : CMD : %s non reconnu
-052 17:59:46 : 	>     TO      to 
-052 17:59:46 : Commande : TO 
-052 17:59:46 : CMD : %s non reconnu
-052 17:59:46 : 	>     SUBJECT sujet 
-052 17:59:46 : Commande : SUBJECT 
-052 17:59:46 : CMD : %s non reconnu
-052 17:59:46 : 	>     BODY 
-052 17:59:46 : Commande : BODY 
-052 17:59:46 : CMD : %s non reconnu
-052 17:59:46 : 	> SET DATABASE type connexion 
-052 17:59:46 : Commande : SET 
-052 17:59:46 : 		DATABASE : type 
-052 17:59:46 : maj_obj
-052 17:59:46 : check service
-052 17:59:46 : End of Turn
-052 17:59:46 : Fin
+053 07:43:10 : debut
+053 07:43:10 : load config main.conf 
+053 07:43:10 : 	> SET FILE name PATH chemin 
+053 07:43:10 : Commande : SET 
+053 07:43:10 : 	> SET DIRECTORY name PATH chemin 
+053 07:43:10 : Commande : SET 
+053 07:43:10 : 	> SET FILE_SYSTEM name DEVICE 
+053 07:43:10 : Commande : SET 
+053 07:43:10 : 		FILE_SYSTEM : name 
+053 07:43:10 : 	> SET HOST name 
+053 07:43:10 : Commande : SET 
+053 07:43:10 : 		HOST : name 
+053 07:43:10 : 	> SET PROGRAM name PATH chemin 
+053 07:43:10 : Commande : SET 
+053 07:43:10 : 	> SET SYSTEM name 
+053 07:43:10 : Commande : SET 
+053 07:43:10 : 		SYSTEM : name 
+053 07:43:10 : 	> SET PROCESS [ pid | pid_file ] 
+053 07:43:10 : Commande : SET 
+053 07:43:10 : 		PROCESS : [ 
+053 07:43:10 : 	> SET GROUP name 
+053 07:43:10 : Commande : SET 
+053 07:43:10 : 		GROUP : name 
+053 07:43:10 : 	>     ADD GROUP name admin@example.com 
+053 07:43:10 : Commande : ADD 
+053 07:43:10 : CMD : ADD non reconnu
+053 07:43:10 : 	>     ADD GROUP name sys@example.com 
+053 07:43:10 : Commande : ADD 
+053 07:43:10 : CMD : ADD non reconnu
+053 07:43:10 : 	>     ADD GROUPE name root@example.com 
+053 07:43:10 : Commande : ADD 
+053 07:43:10 : CMD : ADD non reconnu
+053 07:43:10 : 	> SET MESSAGE name 
+053 07:43:10 : Commande : SET 
+053 07:43:10 : 		MESSAGE : name 
+053 07:43:10 : 	>     FROM    from 
+053 07:43:10 : Commande : FROM 
+053 07:43:10 : CMD : FROM non reconnu
+053 07:43:10 : 	>     TO      to 
+053 07:43:10 : Commande : TO 
+053 07:43:10 : CMD : TO non reconnu
+053 07:43:10 : 	>     SUBJECT sujet 
+053 07:43:10 : Commande : SUBJECT 
+053 07:43:10 : CMD : SUBJECT non reconnu
+053 07:43:10 : 	>     BODY 
+053 07:43:10 : Commande : BODY 
+053 07:43:10 : CMD : BODY non reconnu
+053 07:43:10 : 	> SET DATABASE type connexion 
+053 07:43:10 : Commande : SET 
+053 07:43:10 : 		DATABASE : type 
+053 07:43:10 : maj_obj
+053 07:43:10 : check service
+053 07:43:10 : End of Turn
+053 07:43:10 : Fin
