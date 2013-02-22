@@ -1,54 +1,58 @@
-053 07:43:10 : debut
-053 07:43:10 : load config main.conf 
-053 07:43:10 : 	> SET FILE name PATH chemin 
-053 07:43:10 : Commande : SET 
-053 07:43:10 : 	> SET DIRECTORY name PATH chemin 
-053 07:43:10 : Commande : SET 
-053 07:43:10 : 	> SET FILE_SYSTEM name DEVICE 
-053 07:43:10 : Commande : SET 
-053 07:43:10 : 		FILE_SYSTEM : name 
-053 07:43:10 : 	> SET HOST name 
-053 07:43:10 : Commande : SET 
-053 07:43:10 : 		HOST : name 
-053 07:43:10 : 	> SET PROGRAM name PATH chemin 
-053 07:43:10 : Commande : SET 
-053 07:43:10 : 	> SET SYSTEM name 
-053 07:43:10 : Commande : SET 
-053 07:43:10 : 		SYSTEM : name 
-053 07:43:10 : 	> SET PROCESS [ pid | pid_file ] 
-053 07:43:10 : Commande : SET 
-053 07:43:10 : 		PROCESS : [ 
-053 07:43:10 : 	> SET GROUP name 
-053 07:43:10 : Commande : SET 
-053 07:43:10 : 		GROUP : name 
-053 07:43:10 : 	>     ADD GROUP name admin@example.com 
-053 07:43:10 : Commande : ADD 
-053 07:43:10 : CMD : ADD non reconnu
-053 07:43:10 : 	>     ADD GROUP name sys@example.com 
-053 07:43:10 : Commande : ADD 
-053 07:43:10 : CMD : ADD non reconnu
-053 07:43:10 : 	>     ADD GROUPE name root@example.com 
-053 07:43:10 : Commande : ADD 
-053 07:43:10 : CMD : ADD non reconnu
-053 07:43:10 : 	> SET MESSAGE name 
-053 07:43:10 : Commande : SET 
-053 07:43:10 : 		MESSAGE : name 
-053 07:43:10 : 	>     FROM    from 
-053 07:43:10 : Commande : FROM 
-053 07:43:10 : CMD : FROM non reconnu
-053 07:43:10 : 	>     TO      to 
-053 07:43:10 : Commande : TO 
-053 07:43:10 : CMD : TO non reconnu
-053 07:43:10 : 	>     SUBJECT sujet 
-053 07:43:10 : Commande : SUBJECT 
-053 07:43:10 : CMD : SUBJECT non reconnu
-053 07:43:10 : 	>     BODY 
-053 07:43:10 : Commande : BODY 
-053 07:43:10 : CMD : BODY non reconnu
-053 07:43:10 : 	> SET DATABASE type connexion 
-053 07:43:10 : Commande : SET 
-053 07:43:10 : 		DATABASE : type 
-053 07:43:10 : maj_obj
-053 07:43:10 : check service
-053 07:43:10 : End of Turn
-053 07:43:10 : Fin
+053 14:08:17 : debut
+053 14:08:17 : load config main.conf 
+053 14:08:17 : 	> 6 : SET FILE name PiTH chemin 
+053 14:08:17 : Commande : SET 
+053 14:08:18 :  Parse Error ligne 6:SET FILE name PiTH chemin 
+053 14:08:18 : 	> 8 : SET DIRECTORY name PATH chemin 
+053 14:08:18 : Commande : SET 
+053 14:08:18 : 	> 10 : SET FILE_SYSTEM name DEVICE 
+053 14:08:18 : Commande : SET 
+053 14:08:18 : 		FILE_SYSTEM : name 
+053 14:08:18 : 	> 12 : SET HOST name 
+053 14:08:18 : Commande : SET 
+053 14:08:18 : 	> 14 : SET PROGRAM name PATH chemin 
+053 14:08:18 : Commande : SET 
+053 14:08:18 : 	> 16 : SET SYSTEM name 
+053 14:08:18 : Commande : SET 
+053 14:08:18 : 		SYSTEM : name 
+053 14:08:18 : 	> 18 : SET PROCESS [ pid | pid_file ] 
+053 14:08:18 : Commande : SET 
+053 14:08:18 : 		PROCESS : [ 
+053 14:08:18 : 	> 20 : SET GROUP name 
+053 14:08:18 : Commande : SET 
+053 14:08:18 : 		GROUP : name 
+053 14:08:18 : 	> 21 :     ADD GROUP name admin@example.com 
+053 14:08:18 : Commande : ADD 
+053 14:08:18 : CMD : ADD non reconnu
+053 14:08:18 : 	> 22 :     ADD GROUP name sys@example.com 
+053 14:08:18 : Commande : ADD 
+053 14:08:18 : CMD : ADD non reconnu
+053 14:08:18 : 	> 23 :     ADD GROUPE name root@example.com 
+053 14:08:18 : Commande : ADD 
+053 14:08:18 : CMD : ADD non reconnu
+053 14:08:18 : 	> 25 : SET MESSAGE name 
+053 14:08:18 : Commande : SET 
+053 14:08:18 : 		MESSAGE : name 
+053 14:08:18 : 	> 26 :     FROM    from 
+053 14:08:18 : Commande : FROM 
+053 14:08:18 : CMD : FROM non reconnu
+053 14:08:18 : 	> 28 :     TO      to 
+053 14:08:18 : Commande : TO 
+053 14:08:18 : CMD : TO non reconnu
+053 14:08:18 : 	> 29 :     SUBJECT sujet 
+053 14:08:18 : Commande : SUBJECT 
+053 14:08:18 : CMD : SUBJECT non reconnu
+053 14:08:18 : 	> 30 :     BODY 
+053 14:08:18 : Commande : BODY 
+053 14:08:18 : CMD : BODY non reconnu
+053 14:08:18 : 	> 32 : SET DATABASE type connexion 
+053 14:08:18 : Commande : SET 
+053 14:08:18 : 		DATABASE : type 
+053 14:08:18 : DEBUT maj_obj
+053 14:08:18 :  Objet : HOST:name 
+053 14:08:18 :  Objet : DIRECTORY:name 
+053 14:08:18 :  Objet : PROGRAM:name 
+053 14:08:18 : FIN maj_obj
+053 14:08:18 : check service
+053 14:08:18 : End of Turn
+053 14:08:18 : Fin
