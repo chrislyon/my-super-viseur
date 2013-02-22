@@ -6,6 +6,7 @@
 
 """
  Super Viseur
+ Pour superviser des objets comme des fichiers, des repertoires
 """
 
 import datetime
@@ -15,6 +16,9 @@ import shlex
 import traceback
 import pudb
 
+## ---------------
+## Exceptions
+## ---------------
 class SV_ParseError(Exception):
     """
         Erreur de parsing : transmets la ligne + le contenu de la ligne
@@ -25,6 +29,9 @@ class SV_ParseError(Exception):
     def __str__(self):
         return repr(self.value)
 
+### ----------
+### OBJETS 
+### ----------
 class SV_Object(object):
     """
     Class Object de base 
@@ -46,6 +53,15 @@ class SV_File(SV_Object):
     def __init__(self, nom, path):
         self.nom = nom
         self.typ = 'FILE'
+        self.path = path
+
+class SV_LogFile(SV_Object):
+    """
+        Class Fichier de log
+    """
+    def __init__(self, nom, path):
+        self.nom = nom
+        self.typ = 'LOGFILE'
         self.path = path
 
 class SV_Directory(SV_Object):
@@ -74,16 +90,48 @@ class SV_Host(SV_Object):
         self.nom = nom
         self.typ = 'HOST'
 
+class SV_Group(SV_Object):
+    """
+        Class GROUP
+        Groupe d'adresse mail
+    """
+    def __init__(self, nom):
+        self.nom = nom
+        self.typ = 'GROUP'
+        self.adr = []
+
+class SV_Message(SV_Object):
+    """
+        Class Message
+        Type de message
+    """
+    def __init__(self, nom):
+        self.nom = nom
+        self.typ = 'MESSAGE'
+        self.cible = None
+        self.source = None
+        self.sujet = None
+        self.body = None
+
+
+## -----------------------
+## Objet pour le parser
+## -----------------------
 class Ligne(object):
     """
         Classe ligne de fichier de conf
     """
-    def __init__(self, nol, ligne):
+    def __init__(self, nol, ligne, suite=False):
         self.numlig = nol
         self.ligne = ligne
+        self.suite = suite
+
     def __str__(self):
         return "%s:%s" % (self.numlig, self.ligne)
 
+### --------------
+### SUPERVISEUR
+### --------------
 class Superviseur(object):
     """
         La classe superviseur : qui regule tout
@@ -125,6 +173,7 @@ class Superviseur(object):
         """
             Parsing d'un groupe coherent
         """
+        curr_obj = None
         for li in ligs:
             self.log( "\t> %s : %s " % (li.numlig, li.ligne))
             lexer = shlex.shlex(li.ligne)
@@ -132,12 +181,11 @@ class Superviseur(object):
             self.log( "Commande : %s " % cmd)
             if cmd == 'SET':
                 obj = lexer.next()
-                if obj in ('FILE', 'DIRECTORY', 'PROGRAM'):
+                if obj in ('FILE', 'DIRECTORY', 'PROGRAM', 'LOG_FILE'):
                     try:
                         name = lexer.next()
                         cmd_path = lexer.next()
                         if cmd_path != 'PATH':
-                            pudb.set_trace()
                             raise SV_ParseError(li)
                         path = lexer.next()
                     except:
@@ -150,12 +198,24 @@ class Superviseur(object):
                         self.add_obj( SV_Directory(name, path))
                     if obj == 'PROGRAM':
                         self.add_obj( SV_Program(name, path))
-                elif obj == 'HOST':
+                    if obj == 'LOG_FILE':
+                        self.add_obj( SV_LogFile(name, path))
+                elif obj in ('HOST', 'SERVICE'):
                     try:
                         name = lexer.next()
                     except:
                         raise SV_ParseError(li)
-                    self.add_obj( SV_Host(name) )
+                    if obj == 'HOST':
+                        self.add_obj( SV_Host(name) )
+                elif obj in ( 'GROUP', 'MESSAGE'):
+                    try:
+                        name = lexer.next()
+                    except:
+                        raise SV_ParseError(li)
+                    if obj == 'GROUP':
+                        self.add_obj( SV_Group(name) )
+                    if obj == 'MESSAGE':
+                        self.add_obj( SV_Message(name) )
                 else:
                     self.log( "\t\t%s : %s " % (obj, lexer.next() ))
             else:
@@ -169,6 +229,7 @@ class Superviseur(object):
         for li in lines:
             ## Si cela commence par une suite
             if li.ligne.startswith(('\t', ' ')):
+                li.suite = True
                 ll.append(li)
                 continue
             else:
@@ -177,6 +238,7 @@ class Superviseur(object):
                         self.parse(ll)
                     except SV_ParseError as e:
                         self.log(" Parse Error ligne %s " % e.value)
+                        self.run_ok = False
                     except:
                         e = sys.exc_info()[0]
                         self.log(" Parse Error ligne %s " % e.value)
