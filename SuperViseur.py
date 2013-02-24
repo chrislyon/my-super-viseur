@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 
-# vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4
-
 ## --------------
 ## Super Viseur
 ## --------------
@@ -16,6 +14,7 @@ import time
 import os, sys
 import shlex
 import traceback
+import glob
 import pudb
 
 ## ---------------
@@ -71,6 +70,7 @@ class SV_LogFile(SV_Object):
         self.nom = nom
         self.typ = 'LOGFILE'
         self.path = path
+
     def __str__(self):
         return "%s:%s:%s" % (self.typ, self.nom, self.path)
 
@@ -131,6 +131,29 @@ class SV_Message(SV_Object):
     def __str__(self):
         return "%s:%s:%s:%s:%s:%s" % (self.typ, self.nom, self.cible, self.source, self.sujet, self.corps)
 
+class SV_Alert(SV_Object):
+    """
+        Class Alert
+    """
+    def __init__(self, nom):
+        self.nom = nom
+        self.typ = 'ALERTE'
+        self.group = None
+        self.message = None
+
+class SV_Service(SV_Object):
+    """
+        Class Service
+    """
+    def __init__(self, nom):
+        self.nom = nom
+        self.typ = 'SERVICE'
+        self.start = None
+        self.stop = None
+        self.check = {}
+    def __str__(self):
+        return "%s:%s:%s:%s" % (self.typ, self.nom, self.start, self.stop)
+
 
 ## -----------------------
 ## Objet pour le parser
@@ -160,6 +183,7 @@ class Superviseur(object):
         self.obj = {}
         self.service = {}
         self.conf_file = "main.conf"
+        self.conf_dir = 'conf.d'
         self.run_ok = False
         self.log_file = None
         self.stop_running = False
@@ -176,6 +200,12 @@ class Superviseur(object):
             Ajout d'un objet dans la liste
         """
         self.obj[ obj.get_key() ] = obj
+
+    def add_service(self, obj):
+        """
+            Ajout d'un service dans la liste
+        """
+        self.service[ obj.get_key() ] = obj
 
     def log(self, msg):
         """
@@ -200,9 +230,11 @@ class Superviseur(object):
             lexer = shlex.shlex(li.ligne)
             cmd = lexer.next()
             self.log( "Commande : %s " % cmd)
+            ## Mode body on rcupere c'est tout
             if body_mode and curr_obj and not 'BODY END' in cmd:
                 curr_obj.corps.append( li.ligne )
                 continue
+            ## Si c'est une suite de commande
             if li.suite:
                 if curr_obj.typ == 'MESSAGE':
                     if cmd in ('FROM', 'TO', 'SUBJECT', 'BODY'):
@@ -232,53 +264,77 @@ class Superviseur(object):
                             curr_obj.adr.append(''.join(adr))
                         except:
                             raise SV_ParseError(li)
+                elif curr_obj.typ == 'SERVICE':
+                    if cmd == 'START':
+                        try:
+                            prog = lexer.next()
+                            curr_obj.start = prog
+                        except:
+                            raise SV_ParseError(li)
+                    elif cmd == 'STOP':
+                        try:
+                            prog = lexer.next()
+                            curr_obj.stop = prog
+                        except:
+                            raise SV_ParseError(li)
+                    else:
+                        raise SV_ParseError(li)
                 else:
                     raise SV_ParseError(li)
                 continue
             else:
                 curr_obj = None
+            ## Sinon c'est un commande de base
             if cmd == 'SET':
-               obj = lexer.next()
-               if obj in ('FILE', 'DIRECTORY', 'PROGRAM', 'LOG_FILE'):
-                  try:
-                     name = lexer.next()
-                     cmd_path = lexer.next()
-                     if cmd_path != 'PATH':
+                obj = lexer.next()
+                if obj in ('FILE', 'DIRECTORY', 'PROGRAM', 'LOG_FILE'):
+                    try:
+                        name = lexer.next()
+                        cmd_path = lexer.next()
+                        if cmd_path != 'PATH':
+                            raise SV_ParseError(li)
+                        path = lexer.next()
+                    except:
                         raise SV_ParseError(li)
-                     path = lexer.next()
-                  except:
-                     raise SV_ParseError(li)
-                  ## Si j'arrive ici c'est que la syntaxe est bonne
-                  if obj == 'FILE':
-                     self.add_obj( SV_File(name, path))
-                  if obj == 'DIRECTORY':
-                     self.add_obj( SV_Directory(name, path))
-                  if obj == 'PROGRAM':
-                     self.add_obj( SV_Program(name, path))
-                  if obj == 'LOG_FILE':
-                     self.add_obj( SV_LogFile(name, path))
-               elif obj in ('HOST', 'SERVICE'):
-                  try:
-                     name = lexer.next()
-                  except:
-                     raise SV_ParseError(li)
-                  if obj == 'HOST':
-                     self.add_obj( SV_Host(name) )
-               elif obj in ( 'GROUP', 'MESSAGE'):
-                  try:
-                     name = lexer.next()
-                  except:
-                     raise SV_ParseError(li)
-                  if obj == 'GROUP':
-                     curr_obj = SV_Group(name)
-                     self.add_obj( curr_obj )
-                  if obj == 'MESSAGE':
-                     curr_obj = SV_Message(name)
-                     self.add_obj( curr_obj )
-               else:
-                  self.log( "\t\t%s : %s " % (obj, lexer.next() ))
+                    ## Si j'arrive ici c'est que la syntaxe est bonne
+                    if obj == 'FILE':
+                        self.add_obj( SV_File(name, path))
+                    elif obj == 'DIRECTORY':
+                        self.add_obj( SV_Directory(name, path))
+                    elif obj == 'PROGRAM':
+                        self.add_obj( SV_Program(name, path))
+                    elif obj == 'LOG_FILE':
+                        self.add_obj( SV_LogFile(name, path))
+                    else:
+                        raise SV_ParseError(li)
+                elif obj == 'HOST':
+                    try:
+                        name = lexer.next()
+                        self.add_obj( SV_Host(name) )
+                    except:
+                        raise SV_ParseError(li)
+                elif obj in ( 'GROUP', 'MESSAGE'):
+                    try:
+                        name = lexer.next()
+                    except:
+                        raise SV_ParseError(li)
+                    if obj == 'GROUP':
+                        curr_obj = SV_Group(name)
+                        self.add_obj( curr_obj )
+                    if obj == 'MESSAGE':
+                        curr_obj = SV_Message(name)
+                        self.add_obj( curr_obj )
+                else:
+                    self.log( "\t\t%s : %s " % (obj, lexer.next() ))
+            elif cmd == 'SERVICE':
+                try:
+                    name = lexer.next()
+                    curr_obj = SV_Service(name)
+                    self.add_service( curr_obj )
+                except:
+                    raise SV_ParseError(li)
             else:
-               self.log( "CMD : %s non reconnu" % cmd )
+                self.log( "CMD : %s non reconnu" % cmd )
 
     def parse_lines(self, lines):
         """
@@ -307,28 +363,47 @@ class Superviseur(object):
                     ll = []
                 ll.append(li)
 
+    def load_file(self, fichier):
+        """
+            Chargement d'un fichier et parsing
+        """
+        with open(fichier) as f:
+            nol = 0
+            ll = []
+            for l in f.readlines():
+                nol += 1
+                l = l.rstrip()
+                if l.startswith('#'):
+                    continue
+                if l:
+                    ll.append( Ligne( nol, l) )
+        self.parse_lines(ll)
+
     def load_config(self):
         """
             Chargement de la configuration
+            on commence par conf_dir / main.conf
+            puis par tout les autres fichiers
         """
-        #pudb.set_trace()
-        self.log("load config %s " % self.conf_file)
-        if os.path.exists(self.conf_file):
-            self.run_ok = True
-            with open(self.conf_file) as f:
-                nol = 0
-                ll = []
-                for l in f.readlines():
-                    nol += 1
-                    l = l.rstrip()
-                    if l.startswith('#'):
-                        continue
-                    if l:
-                        ll.append( Ligne( nol, l) )
-            self.parse_lines(ll)
+        self.log("start load config %s " % self.conf_dir)
+        self.run_ok = True
+        ## d'abord on traite le main.conf
+        main_conf = os.path.join(self.conf_dir, self.conf_file)
+        if os.path.exists(main_conf):
+            self.log("**** Parsing main : %s " % main_conf)
+            self.load_file(main_conf)
         else:
-            self.log("Fichier config %s inexistant" % self.conf_file)
+            self.log("Fichier config %s inexistant" % main_conf)
             self.run_ok = False
+        ## Ensuite les fichiers dans conf.d
+        if self.run_ok:
+            for f in glob.glob( os.path.join(self.conf_dir,'*') ):
+                if f == main_conf:
+                    continue
+                self.log("**** Parsing file : %s " % f)
+                self.load_file(f)
+
+        self.log("end load config %s " % self.conf_dir)
 
     def maj_obj(self):
         """
@@ -346,7 +421,11 @@ class Superviseur(object):
         """
             Test des services 
         """
-        self.log("check service")
+        self.log("DEBUT check service")
+        for k in self.service:
+            self.log("===> service : %s " % k)
+            self.log("     %s " % str(self.service[k]))
+        self.log("FIN   check service")
 
     def run(self):
         """
