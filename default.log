@@ -1,80 +1,84 @@
-055 11:43:20 : debut
-055 11:43:20 : start load config conf.d 
-055 11:43:20 : **** Parsing main : conf.d/main.conf 
-055 11:43:20 : 	> 6 : SET FILE name PATH chemin 
-055 11:43:20 : Commande : SET 
-055 11:43:20 : 	> 8 : SET DIRECTORY name PATH chemin 
-055 11:43:20 : Commande : SET 
-055 11:43:20 : 	> 10 : SET LOG_FILE name PATH path 
-055 11:43:20 : Commande : SET 
-055 11:43:20 : 	> 12 : SET FILE_SYSTEM name DEVICE 
-055 11:43:20 : Commande : SET 
-055 11:43:20 : 		FILE_SYSTEM : name 
-055 11:43:20 : 	> 14 : SET HOST name 
-055 11:43:20 : Commande : SET 
-055 11:43:20 : 	> 16 : SET PROGRAM name PATH chemin 
-055 11:43:20 : Commande : SET 
-055 11:43:20 : 	> 21 : SET PROCESS [ pid | pid_file ] 
-055 11:43:20 : Commande : SET 
-055 11:43:20 : 		PROCESS : [ 
-055 11:43:20 : 	> 24 : SET GROUP name 
-055 11:43:20 : Commande : SET 
-055 11:43:20 : 	> 25 :     ADD admin@example.com 
-055 11:43:20 : Commande : ADD 
-055 11:43:20 : 	> 26 :     ADD sys@example.com 
-055 11:43:20 : Commande : ADD 
-055 11:43:20 : 	> 27 :     ADD root@example.com 
-055 11:43:20 : Commande : ADD 
-055 11:43:20 : 	> 30 : SET MESSAGE name 
-055 11:43:20 : Commande : SET 
-055 11:43:20 : 	> 31 :     FROM    from 
-055 11:43:20 : Commande : FROM 
-055 11:43:20 : 	> 33 :     TO      to 
-055 11:43:20 : Commande : TO 
-055 11:43:20 : 	> 34 :     SUBJECT sujet 
-055 11:43:20 : Commande : SUBJECT 
-055 11:43:20 : 	> 35 :     BODY BEGIN 
-055 11:43:20 : Commande : BODY 
-055 11:43:20 : 	> 36 : 		Ceci est est un essai \ 
-055 11:43:20 : Commande : Ceci 
-055 11:43:20 : 	> 37 : 		de saisir un body dans le message \ 
-055 11:43:20 : Commande : de 
-055 11:43:20 : 	> 38 : 	BODY END 
-055 11:43:20 : Commande : BODY 
-055 11:43:20 : 	> 40 : SET FILE test2 PATH "/toto/tutu" 
-055 11:43:20 : Commande : SET 
-055 11:43:20 : 	> 46 : SET ALERT default MAIL group_name MESSAGE msg_name 
-055 11:43:20 : Commande : SET 
-055 11:43:20 : 		ALERT : default 
-055 11:43:20 : **** Parsing file : conf.d/service1.conf 
-055 11:43:20 : 	> 6 : SERVICE TEST 
-055 11:43:20 : Commande : SERVICE 
-055 11:43:20 : 	> 7 :     START program_name 
-055 11:43:20 : Commande : START 
-055 11:43:20 : 	> 8 :     STOP program_name 
-055 11:43:20 : Commande : STOP 
-055 11:43:20 : end load config conf.d 
-055 11:43:20 : DEBUT maj_obj
-055 11:43:20 : ===> Objet : MESSAGE:name 
-055 11:43:20 :      MESSAGE:name:to:from:sujet:['\t\tCeci est est un essai \\', '\t\tde saisir un body dans le message \\', '\tBODY END'] 
-055 11:43:20 : ===> Objet : FILE:test2 
-055 11:43:20 :      FILE:test2:"/toto/tutu" 
-055 11:43:20 : ===> Objet : DIRECTORY:name 
-055 11:43:20 :      DIRECTORY:name:chemin 
-055 11:43:20 : ===> Objet : HOST:name 
-055 11:43:20 :      HOST:name 
-055 11:43:20 : ===> Objet : LOGFILE:name 
-055 11:43:20 :      LOGFILE:name:path 
-055 11:43:20 : ===> Objet : GROUP:name 
-055 11:43:20 :      GROUP:name:['admin@example.com', 'sys@example.com', 'root@example.com'] 
-055 11:43:20 : ===> Objet : FILE:name 
-055 11:43:20 :      FILE:name:chemin 
-055 11:43:20 : ===> Objet : PROGRAM:name 
-055 11:43:20 :      PROGRAM:name:chemin 
-055 11:43:20 : FIN maj_obj
-055 11:43:20 : DEBUT check service
-055 11:43:20 : ===> service : SERVICE:TEST 
-055 11:43:20 :      SERVICE:TEST:program_name:program_name 
-055 11:43:20 : FIN   check service
-055 11:43:20 : End of Turn
-055 11:43:20 : Fin
+056 17:40:39 : debut
+056 17:40:39 : start load config conf.d 
+056 17:40:39 : **** Parsing main : conf.d/main.conf 
+056 17:40:39 : 	> 6 : SET FILE name PATH chemin 
+056 17:40:39 : Commande : SET 
+056 17:40:39 : 	> 8 : SET DIRECTORY name PATH chemin 
+056 17:40:39 : Commande : SET 
+056 17:40:39 : 	> 10 : SET LOG_FILE name PATH path 
+056 17:40:39 : Commande : SET 
+056 17:40:39 : 	> 12 : SET FILE_SYSTEM name DEVICE 
+056 17:40:39 : Commande : SET 
+056 17:40:39 : 		FILE_SYSTEM : name 
+056 17:40:39 : 	> 14 : SET HOST name 
+056 17:40:39 : Commande : SET 
+056 17:40:39 : 	> 16 : SET PROGRAM name PATH chemin 
+056 17:40:39 : Commande : SET 
+056 17:40:39 : 	> 21 : SET PROCESS [ pid | pid_file ] 
+056 17:40:39 : Commande : SET 
+056 17:40:39 : 		PROCESS : [ 
+056 17:40:39 : 	> 24 : SET GROUP name 
+056 17:40:39 : Commande : SET 
+056 17:40:39 : 	> 25 :     ADD admin@example.com 
+056 17:40:39 : Commande : ADD 
+056 17:40:39 : 	> 26 :     ADD sys@example.com 
+056 17:40:39 : Commande : ADD 
+056 17:40:39 : 	> 27 :     ADD root@example.com 
+056 17:40:39 : Commande : ADD 
+056 17:40:39 : 	> 30 : SET MESSAGE name 
+056 17:40:39 : Commande : SET 
+056 17:40:39 : 	> 31 :     FROM    from 
+056 17:40:39 : Commande : FROM 
+056 17:40:39 : 	> 33 :     TO      to 
+056 17:40:39 : Commande : TO 
+056 17:40:39 : 	> 34 :     SUBJECT sujet 
+056 17:40:39 : Commande : SUBJECT 
+056 17:40:39 : 	> 35 :     BODY BEGIN 
+056 17:40:39 : Commande : BODY 
+056 17:40:39 : 	> 36 : 		Ceci est est un essai \ 
+056 17:40:39 : Commande : Ceci 
+056 17:40:39 : 	> 37 : 		de saisir un body dans le message \ 
+056 17:40:39 : Commande : de 
+056 17:40:39 : 	> 38 : 	BODY END 
+056 17:40:39 : Commande : BODY 
+056 17:40:39 : 	> 40 : SET FILE test2 PATH "/toto/tutu" 
+056 17:40:39 : Commande : SET 
+056 17:40:39 : 	> 46 : SET ALERT default MAIL group_name MESSAGE msg_name 
+056 17:40:39 : Commande : SET 
+056 17:40:39 : 		ALERT : default 
+056 17:40:39 : **** Parsing file : conf.d/service1.conf 
+056 17:40:39 : 	> 5 : SET FILE T1 PATH /tmp/test.sv 
+056 17:40:39 : Commande : SET 
+056 17:40:39 : 	> 9 : SERVICE TEST_FILE 
+056 17:40:39 : Commande : SERVICE 
+056 17:40:39 : 	> 10 :     START "date > " T1.abspath 
+056 17:40:39 : Commande : START 
+056 17:40:39 : 	> 11 :     STOP "touch" T1.abspath 
+056 17:40:39 : Commande : STOP 
+056 17:40:39 : end load config conf.d 
+056 17:40:39 : DEBUT maj_obj
+056 17:40:39 : ===> Objet : MESSAGE:name 
+056 17:40:39 :      MESSAGE:name:to:from:sujet:['\t\tCeci est est un essai \\', '\t\tde saisir un body dans le message \\', '\tBODY END'] 
+056 17:40:39 : ===> Objet : FILE:T1 
+056 17:40:39 :      FILE:T1:/tmp/test.sv 
+056 17:40:39 : ===> Objet : FILE:test2 
+056 17:40:39 :      FILE:test2:"/toto/tutu" 
+056 17:40:39 : ===> Objet : DIRECTORY:name 
+056 17:40:39 :      DIRECTORY:name:chemin 
+056 17:40:39 : ===> Objet : HOST:name 
+056 17:40:39 :      HOST:name 
+056 17:40:39 : ===> Objet : LOGFILE:name 
+056 17:40:39 :      LOGFILE:name:path 
+056 17:40:39 : ===> Objet : GROUP:name 
+056 17:40:39 :      GROUP:name:['admin@example.com', 'sys@example.com', 'root@example.com'] 
+056 17:40:39 : ===> Objet : FILE:name 
+056 17:40:39 :      FILE:name:chemin 
+056 17:40:39 : ===> Objet : PROGRAM:name 
+056 17:40:39 :      PROGRAM:name:chemin 
+056 17:40:39 : FIN maj_obj
+056 17:40:39 : DEBUT check service
+056 17:40:39 : ===> service : SERVICE:TEST_FILE 
+056 17:40:39 :      SERVICE:TEST_FILE:"date > ":"touch" 
+056 17:40:39 : FIN   check service
+056 17:40:39 : End of Turn
+056 17:40:39 : Fin

@@ -293,7 +293,7 @@ class Superviseur(object):
                         cmd_path = lexer.next()
                         if cmd_path != 'PATH':
                             raise SV_ParseError(li)
-                        path = lexer.next()
+                        path = ''.join(list(lexer))
                     except:
                         raise SV_ParseError(li)
                     ## Si j'arrive ici c'est que la syntaxe est bonne
