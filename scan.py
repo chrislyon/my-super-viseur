@@ -6,6 +6,7 @@ def identifier(scanner, token): return "IDENT", token
 def comment(scanner, token): return "COMMENT", token
 def ident_data(scanner, token): return "IDENT_DATA", token
 def constant_string(scanner, token): return "STRING", token
+def email(scanner, token): return "EMAIL", token
 def operator(scanner, token):   return "OPERATOR", token
 def digit(scanner, token):      return "DIGIT", token
 def digit_size(scanner, token):      return "DIGIT_SIZE", token
@@ -16,7 +17,7 @@ def end_stmnt(scanner, token):  return "END_STATEMENT"
 def scan(fichier):
     scanner = re.Scanner([
         (r"\#.*", comment),
-        (r"SET|CHECK|SERVICE|IF", command),
+        (r"SET|CHECK|SERVICE|IF|GROUP", command),
         (r"FILE|PATH|ALERT|MESSAGE|THEN", option),
         (r"[a-zA-Z_]+(\.[a-zA-Z_]+)", ident_data),
         (r"[a-zA-Z_]\w*", identifier),
@@ -30,16 +31,18 @@ def scan(fichier):
 
     to_scan = open(fichier).readlines()
 
-    tokens, remainder = scanner.scan(to_scan)
+    tokens, remainder = scanner.scan(" ".join(to_scan))
     print 'Reste : %s ' % remainder
     for token in tokens:
         print token
 
 
 def run(rep):
-    conf = glob.glob(rep+"/*")
-    for l in conf:
-        print l
+    confs = glob.glob(rep+"/*")
+    for c in confs:
+        print "=" * 50
+        scan(c)
+        print "=" * 50
     
 
 if __name__ == '__main__':
