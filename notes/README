@@ -1,0 +1,82 @@
+
+Le principe de base :
+
+lexing avec re.scan
+
+on analyse les conf/* et on en sort :
+
+une liste de liste exemple
+[ 'CMD:SET', 'ID:TOTO', 'PARAM:PATH', ... ]
+
+En gros des objets typ:nom 
+
+cela crée des objets comme des 
+SV_Objets et des SV_Service
+
+Ensuite on execute la mise a jour des SV_Objets
+et le check des services
+
+La mise a jour des objets a pour but de rafraichir les informations
+dans les objets 
+
+le check des services lance pour chaque service 
+les test demandes et eventuellements les actions
+
+SET <SV_Objet>
+CHECK <SV_Service>
+    IF <CONDITIONS> THEN <ACTIONS>
+
+SV_OBJET    : 
+    FILE
+        name
+        PATH "/chemin/absolu"
+    DIRECTORY
+        name 
+        PATH "/chemin/absolu"
+    PROGRAM
+        name 
+        PATH "/chemin/absolu"
+    LOG_FILE
+        name 
+        PATH "/chemin/absolu"
+    FILE_SYSTEM
+        name 
+        PATH "/chemin/absolu"
+    GROUP
+        name
+        ADD user@server.com
+        ADD MAIL name
+    HOST
+        name
+    PROCESS
+        PID 9999
+        PID_FILE "/chemin/absolu"
+    MESSAGE
+    MAIL
+        name user@server.com
+    COUNTER
+        name
+        ADD 9999
+        SUB 9999
+        RESET 9999
+    DATE
+        now
+
+    DATABASE
+        name
+        connexion
+        table
+
+CONDITIONS 
+    <IDENT> ou <IDENT.data> = != < > <= <=
+    <VALEUR>
+        Chiffre
+        Chaine
+        Valeur de volume        100ko 10Mo
+        Valeur en pourcentage   80%
+
+ACTIONS
+    ALERT <MESSAGE> <GROUP>
+    WRITE LOG_FILE <MESSAGE>
+    WRITE DATABASE <MESSAGE>
+

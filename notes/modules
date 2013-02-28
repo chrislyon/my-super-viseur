@@ -1,0 +1,19 @@
+
+
+Description des modules : 
+
+Scripts de configuration 
+   dans un repertoire 
+
+    
+Nettoyage des scripts :
+    Entree : des scripts de configuration
+    - on vire les commentaires
+    - on vire les lignes vides
+    sortie : Liste de Parse.Ligne
+
+Lexer / Analyse des scripts de configuration
+    Entree : liste de liste avec des conf analysees
+    Sortie : des objects SV_Objets et des services SV_Services
+    
+

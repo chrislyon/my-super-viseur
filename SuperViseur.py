@@ -15,8 +15,21 @@ import os, sys
 import shlex
 import traceback
 import glob
+import re
 import Parse_Ligne as P
 import pudb
+
+def identifier(scanner, token): return "IDENT", token
+def comment(scanner, token): return "COMMENT", token
+def ident_data(scanner, token): return "IDENT_DATA", token
+def constant_string(scanner, token): return "STRING", token
+def email(scanner, token): return "EMAIL", token
+def operator(scanner, token):   return "OPERATOR", token
+def digit(scanner, token):      return "DIGIT", token
+def digit_size(scanner, token):      return "DIGIT_SIZE", token
+def command(scanner, token):  return "COMMAND", token
+def option(scanner, token):  return "OPTION", token
+def end_stmnt(scanner, token):  return "END_STATEMENT"
 
 ## ---------------
 ## Exceptions
@@ -203,171 +216,77 @@ class Superviseur(object):
         if self.verbose:
             print l
         
-    def parse(self, ligs):
-        """
-            -------------------------------
-            Parsing d'un groupe coherent
-            -------------------------------
-        """
-        curr_obj = None
-        body_mode = False
-        for li in ligs:
-            self.log( "\t> %s : %s " % (li.numlig, li.ligne))
-            ## Mode "body" on prend c'est tout
-            ## Sinon on parse
-            lexer = shlex.shlex(li.ligne)
-            cmd = lexer.next()
-            self.log( "Commande : %s " % cmd)
-            ## Mode body on rcupere c'est tout
-            if body_mode and curr_obj and not 'BODY END' in cmd:
-                curr_obj.corps.append( li.ligne )
-                continue
-            ## Si c'est une suite de commande
-            if li.suite:
-                if curr_obj.typ == 'MESSAGE':
-                    if cmd in ('FROM', 'TO', 'SUBJECT', 'BODY'):
-                        try:
-                            data = lexer.next()
-                            if cmd == 'FROM':
-                                curr_obj.source = data
-                            elif cmd == 'TO':
-                                curr_obj.cible = data
-                            elif cmd == 'SUBJECT':
-                                curr_obj.sujet = data
-                            elif cmd == 'BODY':
-                                if data == 'BEGIN':
-                                    curr_obj.corps = []
-                                    body_mode = True
-                                elif data == 'END':
-                                    body_mode = False
-                            else:
-                                raise SV_ParseError(li)
-                        except:
-                            raise SV_ParseError(li)
-                        continue
-                elif curr_obj.typ == 'GROUP':
-                    if cmd == 'ADD':
-                        try:
-                            adr = list(lexer)
-                            curr_obj.adr.append(''.join(adr))
-                        except:
-                            raise SV_ParseError(li)
-                elif curr_obj.typ == 'SERVICE':
-                    if cmd == 'START':
-                        try:
-                            prog = lexer.next()
-                            curr_obj.start = prog
-                        except:
-                            raise SV_ParseError(li)
-                    elif cmd == 'STOP':
-                        try:
-                            prog = lexer.next()
-                            curr_obj.stop = prog
-                        except:
-                            raise SV_ParseError(li)
-                    else:
-                        raise SV_ParseError(li)
-                else:
-                    raise SV_ParseError(li)
-                continue
-            else:
-                curr_obj = None
-            ## Sinon c'est un commande de base
-            if cmd == 'SET':
-                obj = lexer.next()
-                if obj in ('FILE', 'DIRECTORY', 'PROGRAM', 'LOG_FILE'):
-                    try:
-                        name = lexer.next()
-                        cmd_path = lexer.next()
-                        if cmd_path != 'PATH':
-                            raise SV_ParseError(li)
-                        path = ''.join(list(lexer))
-                    except:
-                        raise SV_ParseError(li)
-                    ## Si j'arrive ici c'est que la syntaxe est bonne
-                    if obj == 'FILE':
-                        self.add_obj( SV_File(name, path))
-                    elif obj == 'DIRECTORY':
-                        self.add_obj( SV_Directory(name, path))
-                    elif obj == 'PROGRAM':
-                        self.add_obj( SV_Program(name, path))
-                    elif obj == 'LOG_FILE':
-                        self.add_obj( SV_LogFile(name, path))
-                    else:
-                        raise SV_ParseError(li)
-                elif obj == 'HOST':
-                    try:
-                        name = lexer.next()
-                        self.add_obj( SV_Host(name) )
-                    except:
-                        raise SV_ParseError(li)
-                elif obj in ( 'GROUP', 'MESSAGE'):
-                    try:
-                        name = lexer.next()
-                    except:
-                        raise SV_ParseError(li)
-                    if obj == 'GROUP':
-                        curr_obj = SV_Group(name)
-                        self.add_obj( curr_obj )
-                    if obj == 'MESSAGE':
-                        curr_obj = SV_Message(name)
-                        self.add_obj( curr_obj )
-                else:
-                    self.log( "\t\t%s : %s " % (obj, lexer.next() ))
-            elif cmd == 'SERVICE':
-                try:
-                    name = lexer.next()
-                    curr_obj = SV_Service(name)
-                    self.add_service( curr_obj )
-                except:
-                    raise SV_ParseError(li)
-            else:
-                self.log( "CMD : %s non reconnu" % cmd )
 
-    def parse_lines(self, lines):
+    def parse_lines(self,lines):
         """
-        ------------------------------
-        Parsing d'un groupe de lignes
-        ------------------------------
+            Parsing des lignes
         """
-        ll = []
-        for li in lines:
-            ## Si cela commence par une suite
-            if li.ligne.startswith(('\t', ' ')):
-                li.suite = True
-                ll.append(li)
-                continue
-            else:
-                if ll:
-                    try:
-                        self.parse(ll)
-                    except SV_ParseError as e:
-                        self.log(" Parse Error ligne %s " % e.value)
-                        self.run_ok = False
-                    except:
-                        e = sys.exc_info()[0]
-                        self.log(" TraceBack : ")
-                        traceback.print_exc(file=self.log_file)
-                        traceback.print_exc(file=sys.stdout)
-                        self.run_ok = False
-                    ll = []
-                ll.append(li)
+        scanner = re.Scanner([
+            (r"\#.*", comment),
+            (r"[a-zA-Z_.-]*\@[a-zA-Z._-]*", email),
+            (r"[a-zA-Z_]*\.[a-zA-Z_]\w*", ident_data),
+            (r"SET|CHECK|SERVICE|IF|GROUP", command),
+            (r"FILE|PATH|ALERT|MESSAGE|THEN", option),
+            (r"[a-zA-Z_]\w*", identifier),
+            (r"\+|\-|\\|\*|\=|\>|\<|\>\=|\<\=", operator),
+            (r"\".*\"", constant_string),
+            (r"[0-9]+(\.[0-9]+)?(Mo|M|Ko|K|Go|G|o|To|T)?", digit_size),
+            (r"[0-9]+(\.[0-9]+)?", digit),
+            (r"\n", end_stmnt),
+            (r"\s+", None),
+            ])
 
-    def load_file(self, fichier):
-        """
-            Chargement d'un fichier et parsing
-        """
+        for l in lines:
+            print l
+
+            if l.typ == "Mono":
+                tokens, remainder = scanner.scan(l.ligne)
+            else:
+                continue
+
+            if remainder:
+                print 'Reste : %s ' % remainder
+            for token in tokens:
+                print token
+
+    def clean_conf_file(self, fichier):
         with open(fichier) as f:
+            buf = []
             nol = 0
-            ll = []
+            append_mode = False
+            rlines = []
             for l in f.readlines():
                 nol += 1
                 l = l.rstrip()
                 if l.startswith('#'):
                     continue
                 if l:
-                    ll.append( P.Ligne( nol, l) )
-        self.parse_lines(ll)
+                    if '"""' in l:
+                        if not append_mode:
+                            append_mode = True
+                            buf = []
+                        else:
+                            append_mode = False
+                            buf.append(l)
+                            nol += 1 
+                            rlines.append( P.Ligne( nol, buf, typ='Multi') )
+                            continue
+                    if append_mode:
+                        buf.append(l)
+                        continue
+                    ## Sinon c'est une ligne normale
+                    nol += 1
+                    rlines.append( P.Ligne( nol, l, typ='Mono') )
+            return rlines
+
+
+    def load_file(self, fichier):
+        """
+            Chargement d'un fichier et parsing
+        """
+        lines = self.clean_conf_file(fichier)
+        self.parse_lines(lines)
+
 
     def load_config(self):
         """
