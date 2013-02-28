@@ -19,18 +19,6 @@ import re
 import Parse_Ligne as P
 import pudb
 
-def identifier(scanner, token): return "IDENT", token
-def comment(scanner, token): return "COMMENT", token
-def ident_data(scanner, token): return "IDENT_DATA", token
-def constant_string(scanner, token): return "STRING", token
-def email(scanner, token): return "EMAIL", token
-def operator(scanner, token):   return "OPERATOR", token
-def digit(scanner, token):      return "DIGIT", token
-def digit_size(scanner, token):      return "DIGIT_SIZE", token
-def command(scanner, token):  return "COMMAND", token
-def option(scanner, token):  return "OPTION", token
-def end_stmnt(scanner, token):  return "END_STATEMENT"
-
 ## ---------------
 ## Exceptions
 ## ---------------
@@ -217,22 +205,39 @@ class Superviseur(object):
             print l
         
 
+    def identifier(self, scanner, token):       return "IDENT", token
+    def comment(self, scanner, token):          return "COMMENT", token
+    def ident_data(self, scanner, token):       return "IDENT_DATA", token
+    def constant_string(self, scanner, token):  return "STRING", token
+    def email(self, scanner, token):            return "EMAIL", token
+    def operator(self, scanner, token):         return "OPERATOR", token
+    def digit(self, scanner, token):            return "DIGIT", token
+    def percent(self, scanner, token):          return "PERCENT", token
+    def digit_size(self, scanner, token):       return "DIGIT_SIZE", token
+    def command(self, scanner, token):          return "COMMAND", token
+    def option(self, scanner, token):           return "OPTION", token
+    def action(self, scanner, token):           return "ACTION", token
+    def end_stmnt(self, scanner, token):        return "END_STATEMENT"
+
     def parse_lines(self,lines):
         """
             Parsing des lignes
         """
         scanner = re.Scanner([
-            (r"\#.*", comment),
-            (r"[a-zA-Z_.-]*\@[a-zA-Z._-]*", email),
-            (r"[a-zA-Z_]*\.[a-zA-Z_]\w*", ident_data),
-            (r"SET|CHECK|SERVICE|IF|GROUP", command),
-            (r"FILE|PATH|ALERT|MESSAGE|THEN", option),
-            (r"[a-zA-Z_]\w*", identifier),
-            (r"\+|\-|\\|\*|\=|\>|\<|\>\=|\<\=", operator),
-            (r"\".*\"", constant_string),
-            (r"[0-9]+(\.[0-9]+)?(Mo|M|Ko|K|Go|G|o|To|T)?", digit_size),
-            (r"[0-9]+(\.[0-9]+)?", digit),
-            (r"\n", end_stmnt),
+            (r"\#.*", self.comment),
+            (r"[a-zA-Z_.-]*\@[a-zA-Z._-]*", self.email),
+            (r"[a-zA-Z_]*\.[a-zA-Z_]\w*", self.ident_data),
+            (r"SET|CHECK|SERVICE|IF|GROUP", self.command),
+            (r"FILE|PATH|MESSAGE|THEN|ADD", self.option),
+            (r"(ALERT|COUNTER)\b", self.action),
+            (r"[a-zA-Z_]\w*", self.identifier),
+            (r"[%]", self.percent),
+            (r"\+|\-|\\|\*|\=|\>|\<|\>\=|\<\=", self.operator),
+            (r"\".*\"", self.constant_string),
+            (r"\'.*\'", self.constant_string),
+            (r"[0-9]+(\.[0-9]+)?(%|Mo|M|Ko|K|Go|G|o|To|T)\b", self.digit_size),
+            (r"[0-9]+(\.[0-9]+)?\b", self.digit),
+            (r"\n", self.end_stmnt),
             (r"\s+", None),
             ])
 
